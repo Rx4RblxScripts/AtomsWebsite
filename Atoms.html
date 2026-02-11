@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATOMS</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Orbitron',sans-serif;
+}
+
+body{
+    height:100vh;
+    background:#020617;
+    overflow:hidden;
+    color:white;
+}
+
+/* Background */
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+
+/* Glass Card */
+.card{
+    width:90%;
+    max-width:400px;
+    padding:40px 25px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(15px);
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 0 40px rgba(0,150,255,0.2);
+
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+}
+
+/* Logo */
+.logo{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+/* Title */
+.title{
+    font-size:36px;
+    margin-bottom:30px;
+    letter-spacing:1px;
+}
+
+/* Buttons */
+.btn{
+    width:100%;
+    padding:14px;
+    margin:12px 0;
+    border:none;
+    border-radius:12px;
+    font-size:17px;
+    cursor:pointer;
+    transition:0.3s;
+    color:white;
+}
+
+/* Download */
+.download{
+    background:linear-gradient(135deg,#3b82f6,#06b6d4);
+    box-shadow:0 0 15px rgba(59,130,246,0.5);
+}
+
+/* Discord */
+.discord{
+    background:linear-gradient(135deg,#5865F2,#8b5cf6);
+    box-shadow:0 0 15px rgba(139,92,246,0.5);
+}
+
+.btn:hover{
+    transform:scale(1.05);
+    filter:brightness(1.2);
+}
+
+a{
+    text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="card">
+
+    <div class="logo">⚛️ ATOMS</div>
+
+    <div class="title">EXECUTOR</div>
+
+    <!-- DOWNLOAD -->
+    <a href="download.zip" download>
+        <button class="btn download">⬇ Download</button>
+    </a>
+
+    <!-- DISCORD -->
+    <a href="https://discord.gg/86CWy7HvaG" target="_blank">
+        <button class="btn discord">💬 Join Discord</button>
+    </a>
+
+</div>
+
+<script>
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.onresize = ()=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+};
+
+let atoms=[];
+
+class Atom{
+    constructor(){
+        this.x=Math.random()*canvas.width;
+        this.y=Math.random()*canvas.height;
+        this.r=Math.random()*2+1;
+        this.dx=(Math.random()-0.5)*1.3;
+        this.dy=(Math.random()-0.5)*1.3;
+    }
+
+    move(){
+        this.x+=this.dx;
+        this.y+=this.dy;
+
+        if(this.x<0||this.x>canvas.width) this.dx*=-1;
+        if(this.y<0||this.y>canvas.height) this.dy*=-1;
+    }
+
+    draw(){
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+        ctx.fillStyle="#38bdf8";
+        ctx.fill();
+    }
+}
+
+for(let i=0;i<130;i++){
+    atoms.push(new Atom());
+}
+
+function connect(){
+    for(let i=0;i<atoms.length;i++){
+        for(let j=i+1;j<atoms.length;j++){
+
+            let dx=atoms[i].x-atoms[j].x;
+            let dy=atoms[i].y-atoms[j].y;
+            let d=Math.sqrt(dx*dx+dy*dy);
+
+            if(d<130){
+                ctx.strokeStyle="rgba(56,189,248,0.15)";
+                ctx.lineWidth=1;
+
+                ctx.beginPath();
+                ctx.moveTo(atoms[i].x,atoms[i].y);
+                ctx.lineTo(atoms[j].x,atoms[j].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    atoms.forEach(a=>{
+        a.move();
+        a.draw();
+    });
+
+    connect();
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
