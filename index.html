@@ -30,6 +30,28 @@ canvas{
     z-index:-1;
 }
 
+/* Top Right Scripts Button */
+.top-btn{
+    position:fixed;
+    top:20px;
+    right:25px;
+    padding:10px 20px;
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+    cursor:pointer;
+    color:white;
+    background:linear-gradient(135deg,#0ea5e9,#3b82f6);
+    box-shadow:0 0 15px rgba(14,165,233,0.5);
+    transition:0.3s;
+    z-index:10;
+}
+
+.top-btn:hover{
+    transform:scale(1.08);
+    filter:brightness(1.2);
+}
+
 /* Glass Card */
 .card{
     width:90%;
@@ -99,20 +121,22 @@ a{
 
 <body>
 
+<!-- SCRIPTS BUTTON -->
+<a href="https://yourlinkhere.com" target="_blank">
+    <button class="top-btn">Scripts</button>
+</a>
+
 <canvas id="bg"></canvas>
 
 <div class="card">
 
     <div class="logo">⚛️ ATOMS</div>
-
     <div class="title">EXECUTOR</div>
 
-    <!-- DOWNLOAD -->
- <a href="https://www.mediafire.com/file/lpjf7wtgds8as6z/AtomsExecutor-V1.rar/file" download="AtomsExecutor-V1.rar">
-    <button class="btn download">⬇ Download (V1.1)</button>
-</a>
+    <a href="https://www.mediafire.com/file/oibt831chjsg5cz/AtomsExecutor-V1.1.rar/file" download="AtomsExecutor-V1.rar">
+        <button class="btn download">⬇ Download (V1.1)</button>
+    </a>
     
-    <!-- DISCORD -->
     <a href="https://discord.gg/86CWy7HvaG" target="_blank">
         <button class="btn discord">💬 Join Discord</button>
     </a>
@@ -165,7 +189,6 @@ for(let i=0;i<130;i++){
 function connect(){
     for(let i=0;i<atoms.length;i++){
         for(let j=i+1;j<atoms.length;j++){
-
             let dx=atoms[i].x-atoms[j].x;
             let dy=atoms[i].y-atoms[j].y;
             let d=Math.sqrt(dx*dx+dy*dy);
@@ -173,7 +196,6 @@ function connect(){
             if(d<130){
                 ctx.strokeStyle="rgba(56,189,248,0.15)";
                 ctx.lineWidth=1;
-
                 ctx.beginPath();
                 ctx.moveTo(atoms[i].x,atoms[i].y);
                 ctx.lineTo(atoms[j].x,atoms[j].y);
