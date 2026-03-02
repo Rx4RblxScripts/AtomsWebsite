@@ -1,223 +1,350 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATOMS</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+<title>Vanish Dashboard</title>
 
 <style>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Orbitron',sans-serif;
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Segoe UI, sans-serif;
 }
 
 body{
-    height:100vh;
-    background:#020617;
-    overflow:hidden;
-    color:white;
+background:linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#1a1a40);
+background-size:400% 400%;
+animation:bgMove 18s ease infinite;
+color:white;
+display:flex;
+min-height:100vh;
+overflow:hidden;
+position:relative;
 }
 
-/* Background */
-canvas{
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:-1;
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
 
-/* Top Right Scripts Button */
-.top-btn{
-    position:fixed;
-    top:20px;
-    right:25px;
-    padding:10px 20px;
-    border:none;
-    border-radius:12px;
-    font-size:15px;
-    cursor:pointer;
-    color:white;
-    background:linear-gradient(135deg,#0ea5e9,#3b82f6);
-    box-shadow:0 0 15px rgba(14,165,233,0.5);
-    transition:0.3s;
-    z-index:10;
+/* Glow Orbs */
+body::before,
+body::after{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+border-radius:50%;
+filter:blur(120px);
+opacity:0.6;
+animation:float 12s ease-in-out infinite alternate;
+z-index:0;
 }
 
-.top-btn:hover{
-    transform:scale(1.08);
-    filter:brightness(1.2);
+body::before{
+background:#7f00ff;
+top:-150px;
+left:-150px;
 }
 
-/* Glass Card */
+body::after{
+background:#00d4ff;
+bottom:-150px;
+right:-150px;
+animation-delay:4s;
+}
+
+@keyframes float{
+from{transform:translateY(0px);}
+to{transform:translateY(80px);}
+}
+
+/* Sidebar */
+.sidebar{
+width:280px;
+background:rgba(15,20,45,0.85);
+backdrop-filter:blur(15px);
+padding-top:45px;
+display:flex;
+flex-direction:column;
+z-index:1;
+}
+
+.sidebar h3{
+text-align:center;
+margin-bottom:35px;
+font-size:24px;
+letter-spacing:2px;
+background:linear-gradient(90deg,#7f00ff,#00d4ff);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+.sidebar a{
+padding:18px 28px;
+cursor:pointer;
+color:#ccc;
+text-decoration:none;
+font-size:17px;
+transition:.3s;
+}
+
+.sidebar a:hover{
+background:rgba(255,255,255,0.05);
+color:white;
+transform:translateX(6px);
+}
+
+.active-tab{
+background:rgba(255,255,255,0.07);
+color:white;
+box-shadow:inset 4px 0 0 #7f00ff;
+}
+
+/* Main */
+.main{
+flex:1;
+padding:70px;
+overflow-y:auto;
+max-width:1300px;
+margin:auto;
+z-index:1;
+}
+
+.section{
+display:none;
+opacity:0;
+transform:translateY(10px);
+transition:.4s ease;
+}
+
+.section.active{
+display:block;
+opacity:1;
+transform:translateY(0);
+}
+
 .card{
-    width:90%;
-    max-width:400px;
-    padding:40px 25px;
-    background:rgba(255,255,255,0.05);
-    backdrop-filter:blur(15px);
-    border-radius:20px;
-    border:1px solid rgba(255,255,255,0.1);
-    box-shadow:0 0 40px rgba(0,150,255,0.2);
-
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    text-align:center;
+background:rgba(20,25,55,0.85);
+backdrop-filter:blur(20px);
+padding:45px;
+border-radius:22px;
+margin-bottom:35px;
+box-shadow:0 15px 40px rgba(0,0,0,0.4);
 }
 
-/* Logo */
-.logo{
-    font-size:30px;
-    margin-bottom:10px;
+.card h2{
+font-size:26px;
+margin-bottom:25px;
 }
 
-/* Title */
-.title{
-    font-size:36px;
-    margin-bottom:30px;
-    letter-spacing:1px;
+/* Vertical Slider */
+.vertical-slider{
+max-height:550px;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:22px;
+padding-right:8px;
+}
+
+.vertical-slider::-webkit-scrollbar{
+width:6px;
+}
+
+.vertical-slider::-webkit-scrollbar-thumb{
+background:linear-gradient(#7f00ff,#00d4ff);
+border-radius:10px;
+}
+
+.slider-item{
+background:rgba(255,255,255,0.05);
+padding:22px;
+border-radius:18px;
+font-size:17px;
+transition:.3s;
+}
+
+.slider-item:hover{
+background:rgba(255,255,255,0.08);
+transform:scale(1.02);
+}
+
+/* Script Title */
+.slider-item h3{
+color:#00bfff;
+margin-bottom:8px;
+font-size:18px;
+}
+
+/* Code Block */
+pre{
+background:rgba(0,0,0,0.4);
+padding:10px;
+border-radius:8px;
+margin-bottom:10px;
+overflow-x:auto;
 }
 
 /* Buttons */
 .btn{
-    width:100%;
-    padding:14px;
-    margin:12px 0;
-    border:none;
-    border-radius:12px;
-    font-size:17px;
-    cursor:pointer;
-    transition:0.3s;
-    color:white;
-}
-
-/* Download */
-.download{
-    background:linear-gradient(135deg,#3b82f6,#06b6d4);
-    box-shadow:0 0 15px rgba(59,130,246,0.5);
-}
-
-/* Discord */
-.discord{
-    background:linear-gradient(135deg,#5865F2,#8b5cf6);
-    box-shadow:0 0 15px rgba(139,92,246,0.5);
+width:100%;
+padding:16px;
+border:none;
+border-radius:40px;
+background:linear-gradient(90deg,#7f00ff,#00d4ff);
+color:white;
+cursor:pointer;
+margin-top:10px;
+font-size:16px;
+transition:.3s;
 }
 
 .btn:hover{
-    transform:scale(1.05);
-    filter:brightness(1.2);
+transform:scale(1.05);
+box-shadow:0 0 20px rgba(127,0,255,0.7);
 }
 
-a{
-    text-decoration:none;
+/* Mobile */
+@media(max-width:768px){
+body{flex-direction:column;}
+.sidebar{
+flex-direction:row;
+width:100%;
+padding:12px;
+justify-content:space-around;
+}
+.sidebar h3{display:none;}
+.sidebar a{
+font-size:14px;
+padding:10px;
+}
+.main{
+padding:25px;
+max-width:100%;
+}
+.vertical-slider{
+max-height:380px;
+}
 }
 </style>
 </head>
 
 <body>
 
-<!-- SCRIPTS BUTTON -->
-<a href="https://rx4rblxscripts.github.io/VanishStudio/scripts.html" target="_blank">
-    <button class="top-btn">Scripts</button>
-</a>
+<div class="sidebar">
+<h3>Vanish</h3>
+<a class="active-tab" onclick="showSection('executor',this)">Executor</a>
+<a onclick="showSection('scripts',this)">Scripts</a>
+<a onclick="showSection('beams',this)">Beams</a>
+<a onclick="showSection('changelog',this)">Change Log</a>
+</div>
 
-<canvas id="bg"></canvas>
+<div class="main">
 
+<div id="executor" class="section active">
 <div class="card">
+<h2>Executor Versions</h2>
+<div class="vertical-slider">
 
-    <div class="logo">⚛️ ATOMS</div>
-    <div class="title">EXECUTOR</div>
+<div class="slider-item">
+Desktop Version
+<button class="btn" onclick="window.location.href='https://example.com'">Download</button>
+</div>
 
-    <a href="https://work.ink/28sJ/atoms-executor-2" download="AtomsExecutor-V1.rar">
-        <button class="btn download">⬇ Download (V1.2)</button>
-    </a>
-    
-    <a href="https://discord.gg/2uRPzpmQSe" target="_blank">
-        <button class="btn discord">💬 Join Discord</button>
-    </a>
+<div class="slider-item">
+Web Version
+<button class="btn" onclick="window.location.href='https://example.com'">Open</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="scripts" class="section">
+<div class="card">
+<h2>Scripts</h2>
+<div class="vertical-slider">
+
+<div class="slider-item">
+<h3> Vanish Studios | Apocalypse Rising 2 Script</h3>
+<pre>loadstring(game:HttpGet("https://raw.githubusercontent.com/Rx4RblxScripts/VanishStudiosScripts/refs/heads/main/VanishMain.lua"))()</pre>
+<button class="btn" onclick="copyScript(this)">Copy</button>
+</div>
+
+<div class="slider-item">
+<h3>Spectra Hub | Arsenal Script</h3></h3>
+<pre>loadstring(game:HttpGet("https://raw.githubusercontent.com/Rx4RblxScripts/MainScripts/refs/heads/main/SpectraHubArsenal.lua"))()</pre>
+<button class="btn" onclick="copyScript(this)">Copy</button>
+</div>
+
+<div class="slider-item">
+<h3>Vexis | Cheeese Escape [Horror]</h3>
+<pre>loadstring(game:HttpGet("https://raw.githubusercontent.com/Rx4RblxScripts/MainScripts/refs/heads/main/VexisCheeeseEscape.lua"))()</pre>
+<button class="btn" onclick="copyScript(this)">Copy</button>
+</div>
+
+<div class="slider-item">
+<h3>Soon..</h3>
+<pre></pre>
+<button class="btn" onclick="copyScript(this)">Copy</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="beams" class="section">
+<div class="card">
+<h2>Beams</h2>
+<button class="btn" onclick="window.location.href='https://example.com'">
+Activate Beam
+</button>
+</div>
+</div>
+
+<div id="changelog" class="section">
+<div class="card">
+<h2>Change Log</h2>
+Scripts:<br>
+[+] New Script Added Arsenal<br>
+[+] New Script Added Cheeese Escape [Horror]<br>
+
+</div>
+</div>
 
 </div>
 
 <script>
-const canvas = document.getElementById("bg");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-window.onresize = ()=>{
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-};
-
-let atoms=[];
-
-class Atom{
-    constructor(){
-        this.x=Math.random()*canvas.width;
-        this.y=Math.random()*canvas.height;
-        this.r=Math.random()*2+1;
-        this.dx=(Math.random()-0.5)*1.3;
-        this.dy=(Math.random()-0.5)*1.3;
-    }
-
-    move(){
-        this.x+=this.dx;
-        this.y+=this.dy;
-
-        if(this.x<0||this.x>canvas.width) this.dx*=-1;
-        if(this.y<0||this.y>canvas.height) this.dy*=-1;
-    }
-
-    draw(){
-        ctx.beginPath();
-        ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-        ctx.fillStyle="#38bdf8";
-        ctx.fill();
-    }
+function showSection(id,el){
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+document.querySelectorAll(".sidebar a").forEach(a=>a.classList.remove("active-tab"));
+document.getElementById(id).classList.add("active");
+el.classList.add("active-tab");
 }
 
-for(let i=0;i<130;i++){
-    atoms.push(new Atom());
+function copyScript(btn){
+const text = btn.parentElement.querySelector("pre").innerText;
+
+if(navigator.clipboard){
+navigator.clipboard.writeText(text).then(()=>{
+btn.innerText="Copied ✓";
+setTimeout(()=>{btn.innerText="Copy"},1000);
+});
+}else{
+const textarea=document.createElement("textarea");
+textarea.value=text;
+document.body.appendChild(textarea);
+textarea.select();
+document.execCommand("copy");
+document.body.removeChild(textarea);
+btn.innerText="Copied ✓";
+setTimeout(()=>{btn.innerText="Copy"},1000);
 }
-
-function connect(){
-    for(let i=0;i<atoms.length;i++){
-        for(let j=i+1;j<atoms.length;j++){
-            let dx=atoms[i].x-atoms[j].x;
-            let dy=atoms[i].y-atoms[j].y;
-            let d=Math.sqrt(dx*dx+dy*dy);
-
-            if(d<130){
-                ctx.strokeStyle="rgba(56,189,248,0.15)";
-                ctx.lineWidth=1;
-                ctx.beginPath();
-                ctx.moveTo(atoms[i].x,atoms[i].y);
-                ctx.lineTo(atoms[j].x,atoms[j].y);
-                ctx.stroke();
-            }
-        }
-    }
 }
-
-function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    atoms.forEach(a=>{
-        a.move();
-        a.draw();
-    });
-
-    connect();
-    requestAnimationFrame(animate);
-}
-
-animate();
 </script>
 
 </body>
