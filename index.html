@@ -343,10 +343,8 @@
 </div>
 
 <script>
-    
-// ────────────────────────────────────────────────
-//  DASHBOARD FUNCTIONS
-// ────────────────────────────────────────────────
+
+//  DASHBOARD FUNCTION (I put Watermarks Cause Sometimes I forgot)
 
 function showSection(id, el) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
@@ -368,6 +366,76 @@ function copyScript(btn) {
   });
 }
 
+//  Why Are Inspecting My Code :)
+
+async function sendWebhook() {
+  const webhookUrl = document.getElementById("webhook").value.trim();
+  const username   = document.getElementById("username").value.trim();
+  const avatar     = document.getElementById("avatar").value.trim();
+  const message    = document.getElementById("message").value.trim();
+
+  const statusEl = document.getElementById("status");
+
+  // Reset status
+  statusEl.style.display = "none";
+  statusEl.textContent = "";
+
+  // Basic validation
+  if (!webhookUrl) {
+    showStatus("X Please enter a Webhook URL", "error");
+    return;
+  }
+  if (!message) {
+    showStatus("X Message cannot be empty", "error");
+    return;
+  }
+
+  // Simple check if it looks like a Discord webhook
+  if (!webhookUrl.includes("discord.com/api/webhooks") && !webhookUrl.includes("discordapp.com/api/webhooks")) {
+    showStatus("⚠️ URL doesn't look like a Discord webhook", "error");
+    return;
+  }
+
+  // Prepare payload
+  const payload = {
+    content: message
+  };
+
+  if (username) payload.username = username;
+  if (avatar)   payload.avatar_url = avatar;
+
+  try {
+    showStatus("⏳ Sending...", "loading");
+
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      showStatus("✓ Message sent successfully!", "success");
+      // Optional: clear message after success
+      // document.getElementById("message").value = "";
+    } else {
+      const errorText = await response.text().catch(() => "Unknown error");
+      console.error("Discord error:", response.status, errorText);
+      showStatus(`X Failed (${response.status}): ${errorText.slice(0, 100)}`, "error");
+    }
+  } catch (err) {
+    console.error(err);
+    showStatus("X Network error - check webhook URL or your connection", "error");
+  }
+}
+
+function showStatus(text, type) {
+  const statusEl = document.getElementById("status");
+  statusEl.textContent = text;
+  statusEl.style.display = "block";
+  statusEl.className = `status ${type}`; // uses your existing #loading, #success, #error styles
+}
 </script>
 
 </body>
